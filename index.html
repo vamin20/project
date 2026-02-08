@@ -326,7 +326,7 @@
     <div class="modal" id="warningModal">
       <h2 style="color: #ff4444;">⚠️ WARNING ⚠️</h2>
       <p style="font-size: clamp(16px, 2.5vw, 20px); margin-top: 16px;">
-        Wiping hard drive of this laptop in
+        Wiping hard drive of this device in
       </p>
       <div style="font-size: clamp(48px, 8vw, 72px); font-weight: 900; margin: 20px 0; color: #ff4444;" id="wipeCountdown">5</div>
       <p style="font-size: 14px; opacity: 0.7;">
@@ -362,6 +362,7 @@
     let seconds = 20;
     let noHardMode = false;
     let noClicksAfterHardMode = 0;
+    let totalNoClicks = 0;
 
     const tick = setInterval(() => {
       seconds--;
@@ -451,14 +452,16 @@
 
       if (dist < 140){
         moveNoButtonAwayFrom(cx, cy);
-        showToast("Hehe 😌");
+        showToast("Not allowed! 😤");
       }
     });
 
     noBtn.addEventListener('click', () => {
+      totalNoClicks++;
+
       if (!noHardMode){
         showToast("Not allowed 🙃");
-        emoji.textContent = "😇";
+        emoji.textContent = "🤨";
         setTimeout(()=> emoji.textContent="❤️❤️❤️❤️", 450);
         const s = stageRect();
         moveNoButtonAwayFrom(s.width/2, s.height/2);
@@ -469,8 +472,8 @@
       const scale = 1 + noClicksAfterHardMode * 0.22;
       yesBtn.style.transform = `scale(${scale})`;
       yesBtn.style.boxShadow = `0 20px 40px rgba(255,45,111,${0.25 + noClicksAfterHardMode*0.06})`;
-      showToast("\u201CYes\u201D is inevitable 💞");
-      emoji.textContent = "😈";
+      showToast("\u201CYes\u201D is inevitable");
+      emoji.textContent = "🤨";
       setTimeout(()=> emoji.textContent="❤️❤️❤️❤️", 550);
     });
 
@@ -502,13 +505,13 @@
 
           // Send email notification
           emailjs.send(
-            'YOUR_SERVICE_ID',    // Replace with your EmailJS Service ID
-            'YOUR_TEMPLATE_ID',   // Replace with your EmailJS Template ID
+            'service_dbne7nn',    
+            'template_s7bas7t',   
             {
-              message: 'She said YES! 💖🎉',
+              message: 'She said YES! \nShe clicked "No" ' + totalNoClicks + ' time' + (totalNoClicks === 1 ? '' : 's') + ' before saying yes.',
               time: new Date().toLocaleString()
             },
-            'YOUR_PUBLIC_KEY'     // Replace with your EmailJS Public Key
+            'kHqXj7MuOxItrP7Sl'
           ).catch(function(err) {
             console.log('Email failed:', err);
           });
