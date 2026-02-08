@@ -321,6 +321,34 @@
         I'll see you soon ms. angry bird 😘
         <br />
       </p>
+      <p style="margin-top: 18px; font-size: 15px; color: rgba(232,238,252,.7);">Any further comments?</p>
+      <textarea id="commentBox" rows="3" placeholder="Type here..." style="
+        width: min(400px, 80%);
+        margin: 8px auto 0;
+        display: block;
+        padding: 12px 16px;
+        border-radius: 14px;
+        border: 1px solid rgba(255,255,255,.12);
+        background: rgba(255,255,255,.06);
+        color: #e8eefc;
+        font-family: inherit;
+        font-size: 15px;
+        resize: none;
+        outline: none;
+      "></textarea>
+      <button id="sendCommentBtn" type="button" style="
+        margin-top: 12px;
+        border: 0;
+        border-radius: 999px;
+        padding: 12px 28px;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        background: linear-gradient(180deg, #ff4d8d, #ff2d6f);
+        color: white;
+        box-shadow: 0 10px 25px rgba(255,45,111,.25);
+      ">Send 💌</button>
+      <p id="commentSent" style="display:none; margin-top: 10px; font-size: 14px; color: rgba(255,134,184,.9);">Sent! 💕</p>
     </div>
 
     <div class="modal" id="warningModal">
@@ -519,6 +547,31 @@
       }, 1000);
     });
 
+    // Comment send button
+    document.getElementById('sendCommentBtn').addEventListener('click', () => {
+      const comment = document.getElementById('commentBox').value.trim();
+      const btn = document.getElementById('sendCommentBtn');
+      const sentMsg = document.getElementById('commentSent');
+
+      emailjs.send(
+        'service_dbne7nn',
+        'template_s7bas7t',
+        {
+          message: 'She left a comment: "' + (comment || '(no comment)') + '"',
+          time: new Date().toLocaleString()
+        },
+        'kHqXj7MuOxItrP7Sl'
+      ).then(function() {
+        btn.style.display = 'none';
+        document.getElementById('commentBox').style.display = 'none';
+        sentMsg.style.display = 'block';
+      }).catch(function(err) {
+        console.log('Email failed:', err);
+        sentMsg.textContent = 'Failed to send, try again!';
+        sentMsg.style.display = 'block';
+      });
+    });
+
     const canvas = document.getElementById('confetti');
     const ctx = canvas.getContext('2d');
 
@@ -634,7 +687,6 @@
       }
     }
 
-    // Make sure No button starts at a good position once layout is done
     window.addEventListener('load', () => {
       const s = stageRect();
       noBtn.style.left = `${Math.floor(s.width * 0.62)}px`;
